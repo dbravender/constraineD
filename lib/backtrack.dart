@@ -6,7 +6,7 @@ selectUnassignedVariable(Map assignment, CSP csp, bool mrv) {
   // do we want to use the mrv heuristic
   if (mrv) {
     //get the one with the biggest domain
-    int maxRemainingValues = 0;
+    int? maxRemainingValues = 0;
     var maxVariable;
     for (var variable in csp.variables) {
       if (!assignment.containsKey(variable)) {
@@ -17,7 +17,8 @@ selectUnassignedVariable(Map assignment, CSP csp, bool mrv) {
       }
     }
     return maxVariable;
-  } else { //if not just pick the first one that comes up
+  } else {
+    //if not just pick the first one that comes up
     for (var variable in csp.variables) {
       if (!assignment.containsKey(variable)) return variable;
     }
@@ -27,7 +28,7 @@ selectUnassignedVariable(Map assignment, CSP csp, bool mrv) {
 /// get the domain variables in a good order
 orderDomainValues(var variable, Map assignment, CSP csp, bool lcv) {
   if (lcv) {
-      /*// currently works only for binary constraints
+    /*// currently works only for binary constraints
         // dictionary that we'll sort by the key - the number of constraints
         Map newOrder = {};
         // go through the constraints of the var for each value
@@ -60,14 +61,15 @@ bool isConsistent(var variable, var value, Map assignment, CSP csp) {
   return true;
 }
 
-final Future nullFuture = new Future.value(null);  // bit of a hack
+final Future<Map?> nullFuture = new Future.value(null); // bit of a hack
 
 /// the meat of the backtrack algorithm - a recursive depth first search
 /// Returns the assignment, or null if none can be found
-Future<Map> backtrackingSearch(CSP csp, Map assignment, {bool mrv: false, bool
-    mac3: false, bool lcv: false}) {
+Future<Map?> backtrackingSearch(CSP csp, Map assignment,
+    {bool mrv: false, bool mac3: false, bool lcv: false}) {
   // assignment is complete if it has as many assignments as there are variables
-  if (assignment.length == csp.variables.length) return new Future.value(assignment);
+  if (assignment.length == csp.variables.length)
+    return new Future.value(assignment);
 
   // get a var to assign
   var variable = selectUnassignedVariable(assignment, csp, mrv);
@@ -78,7 +80,6 @@ Future<Map> backtrackingSearch(CSP csp, Map assignment, {bool mrv: false, bool
 
     // if the value is consistent with the current assignment we continue
     if (isConsistent(variable, value, assignment, csp)) {
-
       // assign it since it's consistent
       assignment[variable] = value;
 
@@ -94,7 +95,8 @@ Future<Map> backtrackingSearch(CSP csp, Map assignment, {bool mrv: false, bool
                     
                     if (result != False) return result; */
       } else {
-        Future<Map> result = backtrackingSearch(csp, assignment, mrv: mrv, mac3: mac3, lcv: lcv);
+        Future<Map?> result =
+            backtrackingSearch(csp, assignment, mrv: mrv, mac3: mac3, lcv: lcv);
         if (result != nullFuture) return result;
       }
     }

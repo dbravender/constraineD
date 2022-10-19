@@ -9,10 +9,14 @@ class Chip {
   int width;
   int height;
   Chip(this.name, this.width, this.height);
-  
+
   String toString() => name;
 
-  operator ==(Chip other) {
+  @override
+  operator ==(Object other) {
+    if (other is! Chip) {
+      return false;
+    }
     return name == other.name;
   }
 
@@ -31,13 +35,13 @@ class Chip {
 
 //A binary constraint that makes sure two Chip variables do not overlap.
 class CircuitBoardConstraint extends BinaryConstraint {
-  CircuitBoardConstraint(var var1, var var2): super(var1, var2);
+  CircuitBoardConstraint(var var1, var var2) : super(var1, var2);
 
   bool isSatisfied(assignment) {
     //if either variable is not in the assignment then it must be consistent
     //since they still have their domain
-    if (!assignment.containsKey(variable1) || !assignment.containsKey(variable2
-        )) {
+    if (!assignment.containsKey(variable1) ||
+        !assignment.containsKey(variable2)) {
       return true;
     }
     //check that var1 does not overlap var2
@@ -46,19 +50,19 @@ class CircuitBoardConstraint extends BinaryConstraint {
     //http://codesam.blogspot.com/2011/02/check-if-two-rectangles-intersect.html
     int x1 = assignment[variable1][0];
     int y1 = assignment[variable1][1];
-    int x2 = variable1.width - 1 + x1;
-    int y2 = y1 - variable1.height + 1;
-    int x3 = assignment[variable2][0];
+    int? x2 = variable1.width - 1 + x1;
+    int y2 = y1 - variable1.height + 1 as int;
+    int? x3 = assignment[variable2][0];
     int y3 = assignment[variable2][1];
     int x4 = variable2.width - 1 + x3;
-    int y4 = y3 - variable2.height + 1;
+    int y4 = y3 - variable2.height + 1 as int;
 
     //print x1, y1, self.var1.name
     //print x2, y2, self.var1.name
     //print x3, y3, self.var2.name
     //print x4, y4, self.var2.name
     //print (x1 > x4 or x2 < x3 or y1 < y4 or y2 > y3)
-    return (x1 > x4 || x2 < x3 || y1 < y4 || y2 > y3);
+    return (x1 > x4 || x2! < x3! || y1 < y4 || y2 > y3);
   }
 }
 
@@ -71,20 +75,19 @@ void print_cb_solution(Map solution, board_width, board_height) {
   Map board = new Map();
   for (int i = 0; i < board_width; i++) {
     for (int j = 0; j < board_width; j++) {
-        board[new Point(i, j)] = ".";
+      board[new Point(i, j)] = ".";
     }
   }
 
   // label each square
-  for (Chip variable in solution.keys) {
-    int x = solution[variable][0];
-    int y = solution[variable][1];
-    for (int i = 0; i < variable.width; i++) {
+  for (Chip? variable in solution.keys) {
+    int? x = solution[variable][0];
+    int? y = solution[variable][1];
+    for (int i = 0; i < variable!.width; i++) {
       for (int j = 0; j < variable.height; j++) {
         //print ("${x+i}, ${y-j}: ${variable.name}");
-        board[new Point(x+i, y-j)] = variable.name;
+        board[new Point(x! + i, y! - j)] = variable.name;
       }
-
     }
   }
   //print(board);
@@ -129,18 +132,21 @@ void main() {
 
   //run the solution and calculate the time it took
   Stopwatch stopwatch = new Stopwatch()..start();
-  backtrackingSearch(cb_csp, {}, mrv: true).then((Map solution) {
-    print("Took " + stopwatch.elapsed.inSeconds.toString() + " seconds to solve.");
+  backtrackingSearch(cb_csp, {}, mrv: true).then((Map? solution) {
+    print("Took " +
+        stopwatch.elapsed.inSeconds.toString() +
+        " seconds to solve.");
 
-      if (solution == null) {
-        print("No solution found!");
-      } else {
-        print(solution);
-        print("Found a solution on the " + board_width.toString() + "x" +
-            board_height.toString() + "grid:");
-        print_cb_solution(solution, board_width, board_height);
-      }
+    if (solution == null) {
+      print("No solution found!");
+    } else {
+      print(solution);
+      print("Found a solution on the " +
+          board_width.toString() +
+          "x" +
+          board_height.toString() +
+          "grid:");
+      print_cb_solution(solution, board_width, board_height);
+    }
   });
-
-  
 }

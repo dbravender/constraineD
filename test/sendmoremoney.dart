@@ -1,8 +1,7 @@
 import "package:constrained/constrained.dart";
 
 class SendMoreMoneyConstraint extends ListConstraint {
-
-  SendMoreMoneyConstraint(var letters): super(letters);
+  SendMoreMoneyConstraint(var letters) : super(letters);
 
   bool isSatisfied(Map assignment) {
     // if there are duplicate values then it's not correct
@@ -21,9 +20,19 @@ class SendMoreMoneyConstraint extends ListConstraint {
 
     // if all variables have been assigned, check if it adds up correctly
     if (assignment.length == this.variables.length) {
-      int send = assignment["S"] * 1000 + assignment["E"] * 100 + assignment["N"] * 10 + assignment["D"];
-      int more = assignment["M"] * 1000 + assignment["O"] * 100 + assignment["R"] * 10 + assignment["E"];
-      int money = assignment["M"] * 10000 + assignment["O"] * 1000 + assignment["N"] * 100 + assignment["E"] * 10 + assignment["Y"];
+      int send = assignment["S"] * 1000 +
+          assignment["E"] * 100 +
+          assignment["N"] * 10 +
+          assignment["D"];
+      int more = assignment["M"] * 1000 +
+          assignment["O"] * 100 +
+          assignment["R"] * 10 +
+          assignment["E"];
+      int? money = assignment["M"] * 10000 +
+          assignment["O"] * 1000 +
+          assignment["N"] * 100 +
+          assignment["E"] * 10 +
+          assignment["Y"];
       if ((send + more) == money) {
         return true;
       } else {
@@ -35,7 +44,6 @@ class SendMoreMoneyConstraint extends ListConstraint {
     return true;
   }
 }
-
 
 void main() {
   List variables = ["S", "E", "N", "D", "M", "O", "R", "Y"];
@@ -54,10 +62,19 @@ void main() {
   backtrackingSearch(mapCSP, {}, mrv: true).then((solution) {
     print("Took " + stopwatch.elapsed.toString() + " seconds to solve.");
     print(solution);
-    int send = solution["S"] * 1000 + solution["E"] * 100 + solution["N"] * 10 + solution["D"];
-    int more = solution["M"] * 1000 + solution["O"] * 100 + solution["R"] * 10 + solution["E"];
-    int money = solution["M"] * 10000 + solution["O"] * 1000 + solution["N"] * 100 + solution["E"] * 10 + solution["Y"];
+    int? send = solution!["S"] * 1000 +
+        solution["E"] * 100 +
+        solution["N"] * 10 +
+        solution["D"];
+    int? more = solution["M"] * 1000 +
+        solution["O"] * 100 +
+        solution["R"] * 10 +
+        solution["E"];
+    int? money = solution["M"] * 10000 +
+        solution["O"] * 1000 +
+        solution["N"] * 100 +
+        solution["E"] * 10 +
+        solution["Y"];
     print(send.toString() + " + " + more.toString() + " = " + money.toString());
   });
-
 }
