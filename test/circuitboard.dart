@@ -1,6 +1,5 @@
 import "package:constrained/constrained.dart";
 import "dart:math";
-import "dart:async";
 
 //a class to use as a variable for the circuit board
 //a component of the circuit board

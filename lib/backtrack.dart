@@ -64,7 +64,7 @@ bool isConsistent(var variable, var value, Map assignment, CSP csp) {
 /// the meat of the backtrack algorithm - a recursive depth first search
 /// Returns the assignment, or null if none can be found
 Map? backtrackingSearch(CSP csp, Map assignment,
-    {bool mrv: false, bool mac3: false, bool lcv: false}) {
+    {bool mrv = false, bool mac3 = false, bool lcv = false}) {
   // assignment is complete if it has as many assignments as there are variables
   if (assignment.length == csp.variables.length) return assignment;
 
