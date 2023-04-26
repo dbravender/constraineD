@@ -82,9 +82,8 @@ void main() {
   eightQueensCSP.addListConstraint(new EightQueensConstraint(variables));
 
   Stopwatch stopwatch = new Stopwatch()..start();
-  backtrackingSearch(eightQueensCSP, {}, mrv: true).then((solution) {
-    print("Took " + stopwatch.elapsed.toString() + " seconds to solve.");
-    print(solution);
-    drawQueens(solution!);
-  });
+  var solution = backtrackingSearch(eightQueensCSP, {}, mrv: true);
+  print("Took " + stopwatch.elapsed.toString() + " seconds to solve.");
+  print(solution);
+  drawQueens(solution!);
 }

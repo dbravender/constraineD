@@ -59,22 +59,21 @@ void main() {
   mapCSP.addListConstraint(new SendMoreMoneyConstraint(variables));
 
   Stopwatch stopwatch = new Stopwatch()..start();
-  backtrackingSearch(mapCSP, {}, mrv: true).then((solution) {
-    print("Took " + stopwatch.elapsed.toString() + " seconds to solve.");
-    print(solution);
-    int? send = solution!["S"] * 1000 +
-        solution["E"] * 100 +
-        solution["N"] * 10 +
-        solution["D"];
-    int? more = solution["M"] * 1000 +
-        solution["O"] * 100 +
-        solution["R"] * 10 +
-        solution["E"];
-    int? money = solution["M"] * 10000 +
-        solution["O"] * 1000 +
-        solution["N"] * 100 +
-        solution["E"] * 10 +
-        solution["Y"];
-    print(send.toString() + " + " + more.toString() + " = " + money.toString());
-  });
+  var solution = backtrackingSearch(mapCSP, {}, mrv: true);
+  print("Took " + stopwatch.elapsed.toString() + " seconds to solve.");
+  print(solution);
+  int? send = solution!["S"] * 1000 +
+      solution["E"] * 100 +
+      solution["N"] * 10 +
+      solution["D"];
+  int? more = solution["M"] * 1000 +
+      solution["O"] * 100 +
+      solution["R"] * 10 +
+      solution["E"];
+  int? money = solution["M"] * 10000 +
+      solution["O"] * 1000 +
+      solution["N"] * 100 +
+      solution["E"] * 10 +
+      solution["Y"];
+  print(send.toString() + " + " + more.toString() + " = " + money.toString());
 }
